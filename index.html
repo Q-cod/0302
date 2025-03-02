@@ -137,105 +137,104 @@
 
     <script>
         function loadWishes() {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let wishList = document.getElementById("wishList");
+    let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+    let wishList = document.getElementById("wishList");
+    wishList.innerHTML = ""; // 清空愿望列表
 
-            wishList.innerHTML = ""; // 清空愿望列表
+    wishes.forEach((wish, index) => {
+        let wishElement = document.createElement("div");
+        wishElement.className = "wish";
+        
+        let wishText = document.createElement("span");
+        wishText.textContent = wish.text;
 
-            wishes.forEach((wish, index) => {
-                let wishElement = document.createElement("div");
-                wishElement.className = "wish";
-                
-                let wishText = document.createElement("span");
-                wishText.textContent = wish.text;
+        let buttonContainer = document.createElement("div");
+        buttonContainer.className = "buttons";
 
-                let buttonContainer = document.createElement("div");
-                buttonContainer.className = "buttons";
+        let editButton = document.createElement("button");
+        editButton.textContent = "换个吧";
+        editButton.className = "edit";
+        editButton.onclick = function() { editWish(index); };
 
-                let editButton = document.createElement("button");
-                editButton.textContent = "换个吧";
-                editButton.className = "edit";
-                editButton.onclick = function() { editWish(index); };
-
-                wishElement.appendChild(wishText);
-                wishElement.appendChild(buttonContainer);
-                buttonContainer.appendChild(editButton);
-                
-                if (wish.image) {
-                    let wishImg = document.createElement("img");
-                    wishImg.src = wish.image;
-                    wishElement.appendChild(wishImg);
-                }
-
-                wishList.appendChild(wishElement);
-            });
+        wishElement.appendChild(wishText);
+        wishElement.appendChild(buttonContainer);
+        buttonContainer.appendChild(editButton);
+        
+        if (wish.image) {
+            let wishImg = document.createElement("img");
+            wishImg.src = wish.image;
+            wishImg.style.maxWidth = "100px";
+            wishImg.style.borderRadius = "8px";
+            wishImg.style.marginLeft = "10px";
+            wishElement.appendChild(wishImg);
         }
 
-        function checkWishLimit() {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let wishInput = document.getElementById("wishInput");
+        wishList.appendChild(wishElement);
+    });
+}
 
-            if (wishes.length >= 2) {
-                alert("交不了啦~荷包爆炸啦！！💥");
-                wishInput.value = "";
-            }
-        }
+function checkWishLimit() {
+    let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+    let wishInput = document.getElementById("wishInput");
 
-        function submitWish() {
-            let wishInput = document.getElementById("wishInput");
-            let wishText = wishInput.value.trim();
-            let wishImage = document.getElementById("wishImage");
+    if (wishes.length >= 2) {
+        alert("交不了啦~荷包爆炸啦！！💥");
+        wishInput.value = ""; // 清空输入框
+    }
+}
 
-            if (wishText === "") {
-                alert("让我看看愿望在哪里👀");
-                return;
-            }
+function submitWish() {
+    let wishInput = document.getElementById("wishInput");
+    let wishText = wishInput.value.trim();
+    let wishImage = document.getElementById("wishImage");
 
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            if (wishes.length >= 2) {
-                alert("交不了啦~荷包爆炸啦！💥");
-                return;
-            }
+    if (wishText === "") {
+        alert("让我看看愿望在哪里👀");
+        return;
+    }
 
-            let newWish = { text: wishText, image: "" };
+    let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+    if (wishes.length >= 2) {
+        alert("交不了啦~荷包爆炸啦！💥");
+        return;
+    }
 
-            if (wishImage.files.length > 0) {
-                let file = wishImage.files[0];
-                let reader = new FileReader();
-                reader.onload = function(event) {
-                    newWish.image = event.target.result;
-                    wishes.push(newWish);
-                    localStorage.setItem("wishes", JSON.stringify(wishes));
-                    loadWishes();
-                    alert("收到！\n\n即将在下一个跨年前送达🕊");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                wishes.push(newWish);
-                localStorage.setItem("wishes", JSON.stringify(wishes));
-                loadWishes();
-                alert("收到！\n\n即将在下一个跨年前送达🕊");
-            }
+    let newWish = { text: wishText, image: "" };
 
-            wishInput.value = "";
-            wishImage.value = "";
-        }
-
-        function editWish(index) {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let newWishText = prompt("修改你的愿望:", wishes[index].text);
-
-            if (newWishText !== null && newWishText.trim() !== "") {
-                wishes[index].text = newWishText.trim();
-                localStorage.setItem("wishes", JSON.stringify(wishes));
-                loadWishes();
-            }
-        }
-
-        window.onload = function() {
+    if (wishImage.files.length > 0) {
+        let file = wishImage.files[0];
+        let reader = new FileReader();
+        reader.onload = function(event) {
+            newWish.image = event.target.result;
+            wishes.push(newWish);
+            localStorage.setItem("wishes", JSON.stringify(wishes));
             loadWishes();
-            document.getElementById("wishInput").addEventListener("input", checkWishLimit);
+            alert("收到！\n\n即将在下一个跨年前送达🕊");
         };
-    </script>
-</body>
-</html>
+        reader.readAsDataURL(file);
+    } else {
+        wishes.push(newWish);
+        localStorage.setItem("wishes", JSON.stringify(wishes));
+        loadWishes();
+        alert("收到！\n\n即将在下一个跨年前送达🕊");
+    }
+
+    wishInput.value = "";
+    wishImage.value = "";
+}
+
+function editWish(index) {
+    let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+    let newWishText = prompt("修改你的愿望:", wishes[index].text);
+
+    if (newWishText !== null && newWishText.trim() !== "") {
+        wishes[index].text = newWishText.trim();
+        localStorage.setItem("wishes", JSON.stringify(wishes));
+        loadWishes();
+    }
+}
+
+window.onload = function() {
+    loadWishes();
+    document.getElementById("wishInput").addEventListener("input", checkWishLimit);
+};
