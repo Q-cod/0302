@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>🎂 生日愿望墙 🎉</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c7a7b;
+        }
+        input, button {
+            width: 90%;
+            max-width: 400px;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        input {
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #38a169;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2f855a;
+        }
+        #wishList {
+            margin-top: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .wish {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        .edit {
+            background: #f6ad55;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎂 生日愿望墙 🎉</h1>
+    <p>在这里留下你的生日愿望吧！</p>
+    <input type="text" id="wishInput" placeholder="输入你的愿望..." maxlength="100">
+    <button onclick="submitWish()">提交</button>
+    <div id="wishList"></div>
+
+    <script>
+        function loadWishes() {
+            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+            let wishList = document.getElementById("wishList");
+            wishList.innerHTML = "";
+            wishes.forEach((wish, index) => {
+                let wishElement = document.createElement("div");
+                wishElement.className = "wish";
+                let wishText = document.createElement("span");
+                wishText.textContent = wish;
+                let editButton = document.createElement("button");
+                editButton.textContent = "编辑";
+                editButton.className = "edit";
+                editButton.onclick = function() { editWish(index); };
+                wishElement.appendChild(wishText);
+                wishElement.appendChild(editButton);
+                wishList.appendChild(wishElement);
+            });
+        }
+
+        function submitWish() {
+            let wishInput = document.getElementById("wishInput");
+            let wishText = wishInput.value.trim();
+            if (wishText === "") {
+                alert("愿望不能为空！");
+                return;
+            }
+            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+            wishes.push(wishText);
+            localStorage.setItem("wishes", JSON.stringify(wishes));
+            wishInput.value = "";
+            loadWishes();
+        }
+
+        function editWish(index) {
+            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+            let newWish = prompt("修改你的愿望:", wishes[index]);
+            if (newWish !== null && newWish.trim() !== "") {
+                wishes[index] = newWish.trim();
+                localStorage.setItem("wishes", JSON.stringify(wishes));
+                loadWishes();
+            }
+        }
+
+        window.onload = loadWishes;
+    </script>
+</body>
+</html>
