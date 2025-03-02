@@ -10,7 +10,8 @@
         body {
             font-family: 'Indie Flower', cursive;
             text-align: center;
-            background: url('https://cdn.pixabay.com/photo/2017/02/13/15/28/beach-2068383_1280.jpg') no-repeat center center/cover;
+            background: url('https://github.com/Q-cod/0302/blob/main/image.png?raw=true') no-repeat center center/cover;
+            filter: saturate(80%);
             margin: 0;
             padding: 20px;
         }
@@ -131,12 +132,13 @@
     </style>
 </head>
 <body>
-    <h1>🎂 生日愿望墙 🎉</h1>
-    <p>在这里留下你的生日愿望吧！</p>
+    <h1>👸の许愿池🎂</h1>
+    <p>~欢迎来到小小许愿池~</p>
+    <p class="extra-text">让小小的我为小小的你 实现大大的愿望叭</p>
 
     <div id="wish-container">
-        <input type="text" id="wishInput" placeholder="输入你的愿望..." maxlength="100">
-        <button onclick="submitWish()">提交</button>
+        <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
+        <button onclick="submitWish()">抛入</button>
         <div id="wishList"></div>
     </div>
 
@@ -156,12 +158,12 @@
                 buttonContainer.className = "buttons";
 
                 let editButton = document.createElement("button");
-                editButton.textContent = "编辑";
+                editButton.textContent = "改一改";
                 editButton.className = "edit";
                 editButton.onclick = function() { editWish(index); };
 
                 let deleteButton = document.createElement("button");
-                deleteButton.textContent = "删除";
+                deleteButton.textContent = "不要这个";
                 deleteButton.className = "delete";
                 deleteButton.onclick = function() { deleteWish(index); };
 
@@ -177,7 +179,7 @@
             let wishInput = document.getElementById("wishInput");
             let wishText = wishInput.value.trim();
             if (wishText === "") {
-                alert("愿望不能为空！");
+                alert("你忘记填了！");
                 return;
             }
             let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
