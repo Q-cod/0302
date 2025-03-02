@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>👸の许愿池🎂</title>
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
-    
+
     <style>
         body {
             font-family: 'Indie Flower', cursive;
@@ -17,17 +19,14 @@
             margin: 0;
             padding: 20px;
         }
-
         h1 {
             color: #827467;
             font-size: 32px;
         }
-
         p {
             font-size: 16px;
             color: #827467;
         }
-
         #wish-container {
             max-width: 400px;
             margin: auto;
@@ -38,7 +37,6 @@
             position: relative;
             border: 5px solid #b3d4b0;
         }
-
         input, button {
             width: 90%;
             max-width: 400px;
@@ -49,18 +47,15 @@
             font-size: 18px;
             font-family: 'Indie Flower', cursive;
         }
-
         button {
             background: #b8a898;
             color: white;
             cursor: pointer;
             transition: 0.3s;
         }
-
         button:hover {
             background: #a18b7b;
         }
-
         .wish {
             background: white;
             padding: 10px;
@@ -73,20 +68,17 @@
             flex-direction: column;
             align-items: center;
         }
-
         .wish img {
             max-width: 100px;
             max-height: 100px;
             margin-top: 5px;
             border-radius: 8px;
         }
-
         .buttons {
             display: flex;
             gap: 5px;
             margin-top: 5px;
         }
-
         .edit, .delete {
             color: white;
             padding: 5px 10px;
@@ -94,11 +86,9 @@
             cursor: pointer;
             border: none;
         }
-
         .edit {
             background: #f6ad55;
         }
-
         .delete {
             background: #e53e3e;
         }
@@ -170,21 +160,26 @@
                     return;
                 }
 
-                if (wishImage) {
-                    let storageRef = storage.ref('images/' + wishImage.name);
-                    storageRef.put(wishImage).then(snapshot => {
-                        snapshot.ref.getDownloadURL().then(url => {
-                            db.collection("wishes").add({ text: wishText, image: url });
-                            alert("收到！\n\n即将在下一个跨年前送达🕊");
-                        });
-                    });
-                } else {
-                    db.collection("wishes").add({ text: wishText, image: "" });
-                    alert("收到！\n\n即将在下一个跨年前送达🕊");
-                }
+                let newWish = { text: wishText, image: "" };
 
-                document.getElementById("wishInput").value = "";
-                document.getElementById("wishImage").value = "";
+                if (wishImage) {
+                    let storageRef = storage.ref('images/' + Date.now() + '-' + wishImage.name);
+                    storageRef.put(wishImage).then(snapshot => {
+                        return snapshot.ref.getDownloadURL();
+                    }).then(url => {
+                        newWish.image = url;
+                        return db.collection("wishes").add(newWish);
+                    }).then(() => {
+                        alert("收到！\n\n即将在下一个跨年前送达🕊");
+                        document.getElementById("wishInput").value = "";
+                        document.getElementById("wishImage").value = null;
+                    }).catch(error => console.error("上传失败：", error));
+                } else {
+                    db.collection("wishes").add(newWish).then(() => {
+                        alert("收到！\n\n即将在下一个跨年前送达🕊");
+                        document.getElementById("wishInput").value = "";
+                    });
+                }
             });
         }
 
@@ -202,7 +197,7 @@
                 db.collection("wishes").doc(id).delete();
                 if (imageUrl) {
                     let storageRef = storage.refFromURL(imageUrl);
-                    storageRef.delete();
+                    storageRef.delete().catch(err => console.log("图片删除失败:", err));
                 }
             }
         }
