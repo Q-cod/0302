@@ -2,154 +2,93 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>🎂 生日愿望墙 🎉</title>
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日愿望墙</title>
+    
+    <!-- 站酷小薇LOGO体（阿里 CDN） -->
     <style>
+        @import url('//at.alicdn.com/t/c/font_2452842_ajl6a2h6y5i.css');
+
         body {
-            font-family: 'Indie Flower', cursive;
+            font-family: 'ZCOOL XiaoWei Logo', sans-serif;
+            background-color: #fef9f3;
             text-align: center;
-            background: #f0f8ff;
-            margin: 0;
             padding: 20px;
         }
+
         h1 {
-            color: #2c7a7b;
-            font-size: 32px;
+            font-size: 28px;
+            color: #ff6b81;
         }
-        input, button {
-            width: 90%;
+
+        #wish-container {
             max-width: 400px;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-family: 'Indie Flower', cursive;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        input {
+
+        input, button {
+            font-family: 'ZCOOL XiaoWei Logo', sans-serif;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
             border: 1px solid #ccc;
         }
+
         button {
-            background: #38a169;
+            background: #ff6b81;
             color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #2f855a;
-        }
-        #wishList {
-            margin-top: 20px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .wish {
-            background: white;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 20px;
-        }
-        .buttons {
-            display: flex;
-            gap: 5px;
-        }
-        .edit, .delete {
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
             border: none;
-            font-family: 'Indie Flower', cursive;
+            cursor: pointer;
         }
-        .edit {
-            background: #f6ad55;
+
+        button:hover {
+            background: #ff4757;
         }
-        .delete {
-            background: #e53e3e;
+
+        .wish {
+            background: #ffebc8;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
+
     <h1>🎂 生日愿望墙 🎉</h1>
-    <p>在这里留下你的生日愿望吧！</p>
-    <input type="text" id="wishInput" placeholder="输入你的愿望..." maxlength="100">
-    <button onclick="submitWish()">提交</button>
-    <div id="wishList"></div>
+
+    <div id="wish-container">
+        <input type="text" id="wish-input" placeholder="许个生日愿望吧...">
+        <button onclick="addWish()">提交愿望</button>
+
+        <div id="wishes"></div>
+    </div>
 
     <script>
-        function loadWishes() {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let wishList = document.getElementById("wishList");
-            wishList.innerHTML = "";
-            wishes.forEach((wish, index) => {
-                let wishElement = document.createElement("div");
-                wishElement.className = "wish";
-
-                let wishText = document.createElement("span");
-                wishText.textContent = wish;
-
-                let buttonContainer = document.createElement("div");
-                buttonContainer.className = "buttons";
-
-                let editButton = document.createElement("button");
-                editButton.textContent = "编辑";
-                editButton.className = "edit";
-                editButton.onclick = function() { editWish(index); };
-
-                let deleteButton = document.createElement("button");
-                deleteButton.textContent = "删除";
-                deleteButton.className = "delete";
-                deleteButton.onclick = function() { deleteWish(index); };
-
-                buttonContainer.appendChild(editButton);
-                buttonContainer.appendChild(deleteButton);
-                wishElement.appendChild(wishText);
-                wishElement.appendChild(buttonContainer);
-                wishList.appendChild(wishElement);
-            });
-        }
-
-        function submitWish() {
-            let wishInput = document.getElementById("wishInput");
-            let wishText = wishInput.value.trim();
-            if (wishText === "") {
-                alert("愿望不能为空！");
+        function addWish() {
+            let wishText = document.getElementById('wish-input').value;
+            if (wishText.trim() === "") {
+                alert("愿望不能为空哦！");
                 return;
             }
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            wishes.push(wishText);
-            localStorage.setItem("wishes", JSON.stringify(wishes));
-            wishInput.value = "";
-            loadWishes();
+
+            let wishDiv = document.createElement("div");
+            wishDiv.classList.add("wish");
+            wishDiv.innerHTML = wishText + ' <button onclick="deleteWish(this)">❌</button>';
+            
+            document.getElementById('wishes').appendChild(wishDiv);
+            document.getElementById('wish-input').value = ""; // 清空输入框
         }
 
-        function editWish(index) {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let newWish = prompt("修改你的愿望:", wishes[index]);
-            if (newWish !== null && newWish.trim() !== "") {
-                wishes[index] = newWish.trim();
-                localStorage.setItem("wishes", JSON.stringify(wishes));
-                loadWishes();
-            }
+        function deleteWish(btn) {
+            btn.parentElement.remove();
         }
-
-        function deleteWish(index) {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            if (confirm("确定要删除这个愿望吗？")) {
-                wishes.splice(index, 1);
-                localStorage.setItem("wishes", JSON.stringify(wishes));
-                loadWishes();
-            }
-        }
-
-        window.onload = loadWishes;
     </script>
+
 </body>
 </html>
