@@ -185,26 +185,34 @@
         document.getElementById("submitBtn").addEventListener("click", submitWish);
 
         // 🌟 实时加载愿望
-        function loadWishes() {
-            db.collection("wishes").onSnapshot(snapshot => {
-                let wishList = document.getElementById("wishList");
-                wishList.innerHTML = ""; // 先清空愿望列表
+function loadWishes() {
+    db.collection("wishes").onSnapshot(snapshot => {
+        let wishList = document.getElementById("wishList");
+        wishList.innerHTML = ""; // 先清空愿望列表，避免重复渲染
 
-                snapshot.forEach(doc => {
-                    let wishData = doc.data();
-                    let wishElement = document.createElement("div");
-                    wishElement.className = "wish";
-                    wishElement.innerHTML = `
-                        <p>${wishData.text}</p>
-                        <div class="buttons">
-                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
-                            <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
-                        </div>
-                    `;
-                    wishList.appendChild(wishElement); 
-                });
-            });
+        console.log("加载愿望数量:", snapshot.docs.length); // 🔍 调试 Firestore 里有多少条数据
+
+        snapshot.forEach(doc => {
+            let wishData = doc.data();
+            let wishElement = document.createElement("div");
+            wishElement.className = "wish";
+            wishElement.innerHTML = `
+                <p>${wishData.text}</p>
+                <div class="buttons">
+                    <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
+                    <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
+                </div>
+            `;
+            wishList.appendChild(wishElement);
+        });
+
+        if (snapshot.empty) {
+            wishList.innerHTML = "<p>💭 许愿池空空如也，快来许愿吧！</p>";
         }
+    }, error => {
+        console.error("加载愿望失败:", error);
+    });
+}
 
         // 🚀 提交愿望
         function submitWish() {
