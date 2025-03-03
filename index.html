@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>👸の许愿池🎂</title>
+    <title>👸️の许愿池🎂</title>
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
-    
-    <!-- Firebase 兼容 CDN 版本 -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
     <style>
         body {
             font-family: 'Indie Flower', cursive;
@@ -18,7 +13,7 @@
             margin: 0;
             padding: 20px;
             position: relative;
-            overflow: hidden; /* 防止流星超出可视区域 */
+            overflow: hidden;
         }
 
         h1 {
@@ -31,7 +26,7 @@
             color: #827467;
         }
 
-        /* 愿望框（带花草 & 可爱装饰） */
+        /* 愿望框（边框增加花草装饰） */
         #wish-container {
             max-width: 400px;
             margin: auto;
@@ -40,94 +35,20 @@
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border: 5px solid #b3d4b0;
+            position: relative;
         }
-
-        /* 小花、小草装饰 */
-        #wish-container::before {
-            content: "🌿🌸✨";
+        #wish-container::before, #wish-container::after {
+            content: "\ud83c\udf3f\ud83c\udf38\ud83c\udf1f";
             font-size: 18px;
             position: absolute;
-            top: -15px;
+        }
+        #wish-container::before {
+            top: -20px;
             left: 15px;
         }
-
         #wish-container::after {
-            content: "🌼🌿🌺";
-            font-size: 18px;
-            position: absolute;
-            bottom: -15px;
+            bottom: -20px;
             right: 15px;
-        }
-
-        /* 输入框 & 按钮 */
-        input, button {
-            width: 90%;
-            max-width: 400px;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-family: 'Indie Flower', cursive;
-        }
-
-        button {
-            background: #b8a898;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #a18b7b;
-        }
-
-        .wish {
-            background: white;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            font-size: 18px;
-            border-left: 5px solid #b8a898;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .edit, .delete {
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-        }
-
-        .edit {
-            background: #f6ad55;
-        }
-
-        .delete {
-            background: #e53e3e;
-        }
-
-        /* 🎵 音乐按钮 */
-        #music-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            font-size: 20px;
         }
 
         /* 流星特效 */
@@ -137,45 +58,34 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* 防止影响页面上的其他元素 */
-            z-index: -1; /* 确保它在其他内容的下面 */
+            pointer-events: none;
+            z-index: -1;
         }
 
         .meteor {
             position: absolute;
-            background: #fff; /* 流星颜色 */
-            box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; /* 亮闪闪的效果 */
+            background: white;
+            box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
             border-radius: 50%;
             opacity: 0;
-            animation: fall 2s linear infinite, slide 2s ease-in-out infinite;
+            animation: fall 2s linear infinite;
         }
 
         @keyframes fall {
             0% {
-                top: -10%;
+                transform: translate(100vw, -10vh) rotate(45deg);
                 opacity: 1;
             }
             100% {
-                top: 110%;
+                transform: translate(-10vw, 110vh) rotate(45deg);
                 opacity: 0;
-            }
-        }
-
-        @keyframes slide {
-            0% {
-                left: 50%;
-                transform: rotate(0deg);
-            }
-            100% {
-                left: calc(100% - 200px); /* 从右上到左下 */
-                transform: rotate(45deg);
             }
         }
     </style>
 </head>
 <body>
-    <h1>👸の许愿池🎂</h1>
-    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你 实现大大的愿望叭</p>
+    <h1>👸️の许愿池🎂</h1>
+    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你实现大大的愿望叭</p>
 
     <div id="wish-container">
         <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
@@ -183,114 +93,8 @@
         <div id="wishList"></div>
     </div>
 
-    <!-- 🎵 水滴音效 -->
-    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/294"></audio>
-
-    <!-- 🎵 背景音乐 -->
-    <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
-
-    <!-- 🎵 音乐控制按钮 -->
-    <button id="music-control">🎶</button>
-
     <script>
-        console.log("脚本已加载！");
-
-        // 🔥 Firebase 配置
-        const firebaseConfig = {
-            apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
-            authDomain: "project-183888986321454489.firebaseapp.com",
-            projectId: "project-183888986321454489",
-            messagingSenderId: "559498046640",
-            appId: "1:559498046640:web:b49a8626d3341af0765f75",
-        };
-
-        // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        document.getElementById("submitBtn").addEventListener("click", submitWish);
-
-        // 🌟 实时加载愿望
-        function loadWishes() {
-            db.collection("wishes").onSnapshot(snapshot => {
-                let wishList = document.getElementById("wishList");
-                wishList.innerHTML = ""; // 先清空愿望列表
-
-                snapshot.forEach(doc => {
-                    let wishData = doc.data();
-                    let wishElement = document.createElement("div");
-                    wishElement.className = "wish";
-                    wishElement.innerHTML = `
-                        <p>${wishData.text}</p>
-                        <div class="buttons">
-                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
-                            <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
-                        </div>
-                    `;
-                    wishList.appendChild(wishElement);
-                });
-            });
-        }
-
-        // 🚀 提交愿望
-        function submitWish() {
-            let wishText = document.getElementById("wishInput").value.trim();
-            let waterDropSound = document.getElementById("waterDropSound");
-
-            if (!wishText) {
-                alert("让我看看愿望在哪里👀");
-                return;
-            }
-
-            db.collection("wishes").get().then(snapshot => {
-                let wishCount = snapshot.size;
-                if (wishCount >= 2) {
-                    alert("交不了啦~荷包要爆炸啦！💥");
-                    return;
-                }
-
-                waterDropSound.currentTime = 0;
-                waterDropSound.play();
-
-                db.collection("wishes").add({ text: wishText })
-                    .then(() => {
-                        alert("收到！即将在下一个跨年前送达🕊");
-                        document.getElementById("wishInput").value = "";
-                    });
-            });
-        }
-
-        // ✏️ 编辑愿望
-        function editWish(id) {
-            let newWish = prompt("修改你的愿望:");
-            if (newWish && newWish.trim() !== "") {
-                db.collection("wishes").doc(id).update({ text: newWish.trim() });
-            }
-        }
-
-        // ❌ 删除愿望
-        function deleteWish(id) {
-            if (confirm("确定要删除这个愿望吗？")) {
-                db.collection("wishes").doc(id).delete();
-            }
-        }
-
-        // 🎵 背景音乐控制
-        let bgMusic = document.getElementById("bgMusic");
-        let musicControl = document.getElementById("music-control");
-
-        musicControl.addEventListener("click", () => {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                musicControl.innerText = "🎶";
-            } else {
-                bgMusic.pause();
-                musicControl.innerText = "🎵";
-            }
-        });
-
-        // 创建流星雨效果
-        function createMeteor() {
+        function createMeteorShower() {
             const sky = document.createElement("div");
             sky.className = "sky";
             document.body.appendChild(sky);
@@ -300,20 +104,19 @@
                 meteor.className = "meteor";
                 sky.appendChild(meteor);
 
-                const delay = Math.random() * 2; // 延迟时间
-                const size = Math.random() * 3 + 2; // 流星大小
-                const leftPosition = Math.random() * 100 + "%"; // 随机水平位置
-                const angle = Math.random() * 30 + 10; // 随机角度
-
+                const delay = Math.random() * 2;
+                const size = Math.random() * 3 + 2;
+                const leftOffset = Math.random() * window.innerWidth;
+                const topOffset = Math.random() * 100;
+                
                 meteor.style.width = `${size}px`;
                 meteor.style.height = `${size}px`;
-                meteor.style.left = leftPosition;
+                meteor.style.left = `${leftOffset}px`;
+                meteor.style.top = `-${topOffset}px`;
                 meteor.style.animationDelay = `${delay}s`;
-                meteor.style.transform = `rotate(${angle}deg)`;
             }
         }
-
-        createMeteor(); // 初始化流星雨
+        createMeteorShower();
     </script>
 </body>
 </html>
