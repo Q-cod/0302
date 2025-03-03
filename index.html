@@ -20,7 +20,7 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         h1 {
             color: #827467;
             font-size: 32px;
@@ -31,7 +31,6 @@
             color: #827467;
         }
 
-        /* 愿望框 */
         #wish-container {
             max-width: 400px;
             margin: auto;
@@ -43,13 +42,12 @@
             position: relative;
         }
 
-        /* 小花小草装饰固定位置 */
         #wish-container::before {
             content: "🌿🌸✨";
             font-size: 18px;
             position: absolute;
             top: -20px;
-            left: 15px;
+            left: 10px;
         }
 
         #wish-container::after {
@@ -57,71 +55,92 @@
             font-size: 18px;
             position: absolute;
             bottom: -20px;
-            right: 15px;
+            right: 10px;
         }
 
-        /* 流星雨背景 */
+        input, button {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-family: 'Indie Flower', cursive;
+        }
+
+        button {
+            background: #b8a898;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a18b7b;
+        }
+
+        .wish {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 18px;
+            border-left: 5px solid #b8a898;
+        }
+
+        /* 🌠 流星雨效果 */
         .meteor {
             position: absolute;
+            width: 4px;
+            height: 20px;
             background: white;
-            box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+            box-shadow: 0 0 10px white, 0 0 20px white;
+            opacity: 0.8;
             border-radius: 50%;
-            opacity: 0;
-            animation: fall 3s linear infinite;
+            transform: rotate(45deg);
+            animation: fall linear infinite;
         }
-
+        
         @keyframes fall {
-            0% { opacity: 1; transform: translateY(0) translateX(0); }
-            100% { opacity: 0; transform: translateY(100vh) translateX(-50vw); }
+            from {
+                transform: translateY(-100vh) rotate(45deg);
+            }
+            to {
+                transform: translateY(100vh) rotate(45deg);
+            }
         }
     </style>
 </head>
 <body>
     <h1>👸の许愿池🎂</h1>
     <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你 实现大大的愿望叭</p>
-
+    
     <div id="wish-container">
         <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
         <button id="submitBtn">抛入</button>
         <div id="wishList"></div>
     </div>
-
-    <!-- 音效 -->
-    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/294"></audio>
-    <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
-    <button id="music-control">🎶</button>
-
+    
     <script>
-        // 背景音乐控制
-        let bgMusic = document.getElementById("bgMusic");
-        let musicControl = document.getElementById("music-control");
-        musicControl.addEventListener("click", () => {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                musicControl.innerText = "🎶";
-            } else {
-                bgMusic.pause();
-                musicControl.innerText = "🎵";
-            }
-        });
-
-        // 流星雨效果
-        function createMeteorShower() {
-            for (let i = 0; i < 30; i++) {
+        function createMeteors() {
+            for (let i = 0; i < 100; i++) {
                 let meteor = document.createElement("div");
                 meteor.className = "meteor";
                 document.body.appendChild(meteor);
-                let delay = Math.random() * 3;
-                let size = Math.random() * 4 + 2;
-                let leftPos = Math.random() * window.innerWidth;
-                meteor.style.width = size + "px";
-                meteor.style.height = size + "px";
-                meteor.style.left = leftPos + "px";
-                meteor.style.animationDelay = delay + "s";
+                
+                let delay = Math.random() * 5;
+                let left = Math.random() * window.innerWidth;
+                let size = Math.random() * 2 + 2;
+                let duration = Math.random() * 3 + 2;
+                
+                meteor.style.left = `${left}px`;
+                meteor.style.width = `${size}px`;
+                meteor.style.height = `${size * 5}px`;
+                meteor.style.animationDuration = `${duration}s`;
+                meteor.style.animationDelay = `${delay}s`;
             }
         }
-
-        createMeteorShower();
+        createMeteors();
     </script>
 </body>
 </html>
