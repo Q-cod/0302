@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     
     <!-- Firebase 兼容 CDN 版本 -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <style>
         body {
@@ -25,19 +24,12 @@
             font-size: 32px;
         }
 
-        p {
-            font-size: 16px;
-            color: #827467;
-        }
-
         #wish-container {
             max-width: 400px;
             margin: auto;
             padding: 20px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
             border: 5px solid #b3d4b0;
         }
 
@@ -68,41 +60,8 @@
             padding: 10px;
             margin: 8px 0;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             font-size: 18px;
             border-left: 5px solid #b8a898;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .wish img {
-            max-width: 100px;
-            max-height: 100px;
-            margin-top: 5px;
-            border-radius: 8px;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .edit, .delete {
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-        }
-
-        .edit {
-            background: #f6ad55;
-        }
-
-        .delete {
-            background: #e53e3e;
         }
     </style>
 </head>
@@ -112,36 +71,28 @@
 
     <div id="wish-container">
         <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
-        <input type="file" id="wishImage" accept="image/*">
         <button id="submitBtn">抛入</button>
         <div id="wishList"></div>
     </div>
+
+    <!-- 🎵 水滴音效 -->
+    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/4381"></audio>
 
     <script>
         console.log("脚本已加载！");
 
         // 🔥 Firebase 配置
         const firebaseConfig = {
-    apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
-    authDomain: "project-183888986321454489.firebaseapp.com",
-    projectId: "project-183888986321454489",
-    storageBucket: "project-183888986321454489.appspot.com",
-    messagingSenderId: "559498046640",
-    appId: "1:559498046640:web:b49a8626d3341af0765f75",
-    measurementId: "G-E8SWE70R3R"
-};
+            apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
+            authDomain: "project-183888986321454489.firebaseapp.com",
+            projectId: "project-183888986321454489",
+            messagingSenderId: "559498046640",
+            appId: "1:559498046640:web:b49a8626d3341af0765f75"
+        };
 
-// 初始化 Firebase
-firebase.initializeApp(firebaseConfig);
-
-// ✅ 测试 Firebase 是否正确加载
-console.log("🔥 Firebase 加载完成:", firebase);
-console.log("📜 Firestore 数据库:", firebase.firestore());
-console.log("📦 Storage 存储:", firebase.storage());
-
-// 获取 Firestore 和 Storage
-const db = firebase.firestore();
-const storage = firebase.storage();
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         document.getElementById("submitBtn").addEventListener("click", submitWish);
 
@@ -155,14 +106,7 @@ const storage = firebase.storage();
                     let wishData = doc.data();
                     let wishElement = document.createElement("div");
                     wishElement.className = "wish";
-                    wishElement.innerHTML = `
-                        <p>${wishData.text}</p>
-                        ${wishData.image ? `<img src="${wishData.image}" width="100">` : ""}
-                        <div class="buttons">
-                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
-                            <button class="delete" onclick="deleteWish('${doc.id}', '${wishData.image}')">删掉</button>
-                        </div>
-                    `;
+                    wishElement.innerHTML = `<p>${wishData.text}</p>`;
                     wishList.appendChild(wishElement);
                 });
             });
@@ -171,7 +115,7 @@ const storage = firebase.storage();
         // 🚀 提交愿望
         function submitWish() {
             let wishText = document.getElementById("wishInput").value.trim();
-            let wishImage = document.getElementById("wishImage").files[0];
+            let waterDropSound = document.getElementById("waterDropSound"); // 获取音效
 
             if (!wishText) {
                 alert("让我看看愿望在哪里👀");
@@ -184,41 +128,15 @@ const storage = firebase.storage();
                     return;
                 }
 
-                if (wishImage) {
-                    let storageRef = storage.ref('images/' + wishImage.name);
-                    storageRef.put(wishImage).then(snapshot => {
-                        snapshot.ref.getDownloadURL().then(url => {
-                            db.collection("wishes").add({ text: wishText, image: url });
-                            alert("收到！即将在下一个跨年前送达🕊");
-                        });
-                    });
-                } else {
-                    db.collection("wishes").add({ text: wishText, image: "" });
-                    alert("收到！即将在下一个跨年前送达🕊");
-                }
+                // 播放水滴音效
+                waterDropSound.currentTime = 0; // 让音效从头播放
+                waterDropSound.play();
+
+                db.collection("wishes").add({ text: wishText });
+                alert("收到！即将在下一个跨年前送达🕊");
 
                 document.getElementById("wishInput").value = "";
-                document.getElementById("wishImage").value = "";
             });
-        }
-
-        // ✏️ 编辑愿望
-        function editWish(id) {
-            let newWish = prompt("修改你的愿望:");
-            if (newWish && newWish.trim() !== "") {
-                db.collection("wishes").doc(id).update({ text: newWish.trim() });
-            }
-        }
-
-        // ❌ 删除愿望
-        function deleteWish(id, imageUrl) {
-            if (confirm("确定要删除这个愿望吗？")) {
-                db.collection("wishes").doc(id).delete();
-                if (imageUrl) {
-                    let storageRef = storage.refFromURL(imageUrl);
-                    storageRef.delete();
-                }
-            }
         }
 
         window.onload = loadWishes;
