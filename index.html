@@ -17,6 +17,7 @@
             background-color: #faf0e6;
             margin: 0;
             padding: 20px;
+            position: relative;
         }
 
         h1 {
@@ -281,7 +282,7 @@
 
             // 设置流星的随机位置、大小和动画延迟
             const leftPosition = Math.random() * 100;  // 让流星水平位置随机
-            const size = Math.random() * 3 + 2;  // 流星的宽度大小
+            const size = Math.random() * 5 + 5;  // 流星的宽度大小
             const duration = Math.random() * 2 + 2;  // 流星下落的时长
             const angle = Math.random() * 30 + 30;  // 流星的倾斜角度
 
@@ -289,6 +290,7 @@
             meteor.style.width = `${size}px`;
             meteor.style.height = `${size * 5}px`;
             meteor.style.animationDuration = `${duration}s`;
+            meteor.style.animationDelay = `${Math.random() * 2}s`;  // 随机延迟动画启动
             meteor.style.transform = `rotate(${angle}deg)`;
 
             // 流星完成后移除
@@ -298,7 +300,7 @@
         };
 
         // 每隔 0.5 秒生成一个新的流星
-        setInterval(createMeteor, 500);
+        setInterval(createMeteor, 1000);
         
         // 页面加载时，调用loadWishes来加载现有的愿望
         loadWishes();
