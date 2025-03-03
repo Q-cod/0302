@@ -131,26 +131,27 @@ const db = firebase.firestore();
         document.getElementById("submitBtn").addEventListener("click", submitWish);
 
         // 🌟 实时加载愿望
-        function loadWishes() {
-            db.collection("wishes").onSnapshot(snapshot => {
-                let wishList = document.getElementById("wishList");
-                wishList.innerHTML = "";
+       function loadWishes() {
+    db.collection("wishes").onSnapshot(snapshot => {
+        let wishList = document.getElementById("wishList");
+        wishList.innerHTML = ""; // 先清空愿望列表
 
-                snapshot.forEach(doc => {
-                    let wishData = doc.data();
-                    let wishElement = document.createElement("div");
-                    wishElement.className = "wish";
-                    wishElement.innerHTML = 
-                        <p>${wishData.text}</p>
-                        <div class="buttons">
-                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
-                            <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
-                        </div>
-                    ;
-                    wishList.appendChild(wishElement);
-                });
-            });
-        }
+        snapshot.forEach(doc => {
+            let wishData = doc.data();
+            let wishElement = document.createElement("div");
+            wishElement.className = "wish";
+            wishElement.innerHTML = `
+                <p>${wishData.text}</p>
+                <div class="buttons">
+                    <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
+                    <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
+                </div>
+            `;
+            wishList.appendChild(wishElement);
+        });
+    });
+}
+
 
         // 🚀 提交愿望
         function submitWish() {
