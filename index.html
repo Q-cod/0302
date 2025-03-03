@@ -41,6 +41,23 @@
             border: 5px solid #b3d4b0;
         }
 
+        /* 小花、小草装饰 */
+        #wish-container::before {
+            content: "🌿🌸✨";
+            font-size: 18px;
+            position: absolute;
+            top: -15px;
+            left: 15px;
+        }
+
+        #wish-container::after {
+            content: "🌼🌿🌺";
+            font-size: 18px;
+            position: absolute;
+            bottom: -15px;
+            right: 15px;
+        }
+
         input, button {
             width: 90%;
             max-width: 400px;
@@ -165,7 +182,7 @@
     </div>
 
     <!-- 🎵 水滴音效 -->
-    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/295"></audio>
+    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/294"></audio>
 
     <!-- 🎵 背景音乐 -->
     <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
