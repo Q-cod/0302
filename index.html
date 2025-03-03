@@ -19,14 +19,17 @@
             margin: 0;
             padding: 20px;
         }
+
         h1 {
             color: #827467;
             font-size: 32px;
         }
+
         p {
             font-size: 16px;
             color: #827467;
         }
+
         #wish-container {
             max-width: 400px;
             margin: auto;
@@ -37,6 +40,7 @@
             position: relative;
             border: 5px solid #b3d4b0;
         }
+
         input, button {
             width: 90%;
             max-width: 400px;
@@ -47,15 +51,18 @@
             font-size: 18px;
             font-family: 'Indie Flower', cursive;
         }
+
         button {
             background: #b8a898;
             color: white;
             cursor: pointer;
             transition: 0.3s;
         }
+
         button:hover {
             background: #a18b7b;
         }
+
         .wish {
             background: white;
             padding: 10px;
@@ -68,17 +75,20 @@
             flex-direction: column;
             align-items: center;
         }
+
         .wish img {
             max-width: 100px;
             max-height: 100px;
             margin-top: 5px;
             border-radius: 8px;
         }
+
         .buttons {
             display: flex;
             gap: 5px;
             margin-top: 5px;
         }
+
         .edit, .delete {
             color: white;
             padding: 5px 10px;
@@ -86,9 +96,11 @@
             cursor: pointer;
             border: none;
         }
+
         .edit {
             background: #f6ad55;
         }
+
         .delete {
             background: #e53e3e;
         }
@@ -96,16 +108,18 @@
 </head>
 <body>
     <h1>👸の许愿池🎂</h1>
-    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你 实现大大的愿望叭</p>
+    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你实现大大的愿望叭</p>
 
     <div id="wish-container">
         <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
         <input type="file" id="wishImage" accept="image/*">
-        <button onclick="submitWish()">抛入</button>
+        <button id="submitBtn">抛入</button>
         <div id="wishList"></div>
     </div>
 
     <script>
+        console.log("脚本已加载！");
+
         // 🔥 Firebase 配置
         const firebaseConfig = {
             apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
@@ -120,6 +134,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const storage = firebase.storage();
+
+        document.getElementById("submitBtn").addEventListener("click", submitWish);
 
         // 🌟 实时加载愿望
         function loadWishes() {
@@ -155,31 +171,26 @@
             }
 
             db.collection("wishes").get().then(snapshot => {
-                if (snapshot.size >= 2) {
-                    alert("交不了啦~荷包爆炸啦！💥");
+                if (snapshot.size >= 5) {
+                    alert("许愿池快满啦！请等待更新💫");
                     return;
                 }
 
-                let newWish = { text: wishText, image: "" };
-
                 if (wishImage) {
-                    let storageRef = storage.ref('images/' + Date.now() + '-' + wishImage.name);
+                    let storageRef = storage.ref('images/' + wishImage.name);
                     storageRef.put(wishImage).then(snapshot => {
-                        return snapshot.ref.getDownloadURL();
-                    }).then(url => {
-                        newWish.image = url;
-                        return db.collection("wishes").add(newWish);
-                    }).then(() => {
-                        alert("收到！\n\n即将在下一个跨年前送达🕊");
-                        document.getElementById("wishInput").value = "";
-                        document.getElementById("wishImage").value = null;
-                    }).catch(error => console.error("上传失败：", error));
-                } else {
-                    db.collection("wishes").add(newWish).then(() => {
-                        alert("收到！\n\n即将在下一个跨年前送达🕊");
-                        document.getElementById("wishInput").value = "";
+                        snapshot.ref.getDownloadURL().then(url => {
+                            db.collection("wishes").add({ text: wishText, image: url });
+                            alert("收到！即将在下一个跨年前送达🕊");
+                        });
                     });
+                } else {
+                    db.collection("wishes").add({ text: wishText, image: "" });
+                    alert("收到！即将在下一个跨年前送达🕊");
                 }
+
+                document.getElementById("wishInput").value = "";
+                document.getElementById("wishImage").value = "";
             });
         }
 
@@ -197,7 +208,7 @@
                 db.collection("wishes").doc(id).delete();
                 if (imageUrl) {
                     let storageRef = storage.refFromURL(imageUrl);
-                    storageRef.delete().catch(err => console.log("图片删除失败:", err));
+                    storageRef.delete();
                 }
             }
         }
