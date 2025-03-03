@@ -48,7 +48,7 @@
             content: "🌿🌸✨";
             font-size: 18px;
             position: absolute;
-            top: -20px;
+            top: -18px;
             left: 15px;
         }
 
@@ -56,7 +56,7 @@
             content: "🌼🌿🌺";
             font-size: 18px;
             position: absolute;
-            bottom: -20px;
+            bottom: -18px;
             right: 15px;
         }
 
@@ -138,7 +138,7 @@
             box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
             border-radius: 50%;
             opacity: 0;
-            animation: fall 5s linear infinite;
+            animation: fall 3s linear infinite;
         }
 
         @keyframes fall {
@@ -161,7 +161,7 @@
     <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/295"></audio>
 
     <!-- 🎵 背景音乐 -->
-    <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
+    <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop autoplay></audio>
 
     <!-- 🎵 音乐控制按钮 -->
     <button id="music-control">🎶</button>
@@ -195,15 +195,13 @@
                     let wishElement = document.createElement("div");
                     wishElement.className = "wish";
                     wishElement.innerHTML = `
-    <p>${wishData.text}</p>
-    <div class="buttons">
-        <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
-        <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
-    </div>
-`;
-
-wishList.appendChild(wishElement); 
-
+                        <p>${wishData.text}</p>
+                        <div class="buttons">
+                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
+                            <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
+                        </div>
+                    `;
+                    wishList.appendChild(wishElement); 
                 });
             });
         }
