@@ -6,10 +6,10 @@
     <title>👸の许愿池🎂</title>
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+    <!-- Firebase 兼容 CDN 版本 -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
     <style>
         body {
@@ -122,18 +122,26 @@
 
         // 🔥 Firebase 配置
         const firebaseConfig = {
-            apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
-            authDomain: "project-183888986321454489.firebaseapp.com",
-            projectId: "project-183888986321454489",
-            storageBucket: "project-183888986321454489.appspot.com",
-            messagingSenderId: "559498046640",
-            appId: "1:559498046640:web:b49a8626d3341af0765f75",
-            measurementId: "G-E8SWE70R3R"
-        };
+    apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
+    authDomain: "project-183888986321454489.firebaseapp.com",
+    projectId: "project-183888986321454489",
+    storageBucket: "project-183888986321454489.appspot.com",
+    messagingSenderId: "559498046640",
+    appId: "1:559498046640:web:b49a8626d3341af0765f75",
+    measurementId: "G-E8SWE70R3R"
+};
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
+// 初始化 Firebase
+firebase.initializeApp(firebaseConfig);
+
+// ✅ 测试 Firebase 是否正确加载
+console.log("🔥 Firebase 加载完成:", firebase);
+console.log("📜 Firestore 数据库:", firebase.firestore());
+console.log("📦 Storage 存储:", firebase.storage());
+
+// 获取 Firestore 和 Storage
+const db = firebase.firestore();
+const storage = firebase.storage();
 
         document.getElementById("submitBtn").addEventListener("click", submitWish);
 
