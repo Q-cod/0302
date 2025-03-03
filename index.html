@@ -7,9 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     
     <!-- Firebase 兼容 CDN 版本 -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <style>
         body {
@@ -37,7 +36,6 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
             border: 5px solid #b3d4b0;
         }
 
@@ -117,45 +115,45 @@
 
         // 🔥 Firebase 配置
         const firebaseConfig = {
-    apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
-    authDomain: "project-183888986321454489.firebaseapp.com",
-    projectId: "project-183888986321454489",
-    messagingSenderId: "559498046640",
-    appId: "1:559498046640:web:b49a8626d3341af0765f75",
-};
+            apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
+            authDomain: "project-183888986321454489.firebaseapp.com",
+            projectId: "project-183888986321454489",
+            messagingSenderId: "559498046640",
+            appId: "1:559498046640:web:b49a8626d3341af0765f75",
+        };
 
-// 初始化 Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         document.getElementById("submitBtn").addEventListener("click", submitWish);
 
         // 🌟 实时加载愿望
-       function loadWishes() {
-    db.collection("wishes").onSnapshot(snapshot => {
-        let wishList = document.getElementById("wishList");
-        wishList.innerHTML = ""; // 先清空愿望列表
+        function loadWishes() {
+            db.collection("wishes").onSnapshot(snapshot => {
+                let wishList = document.getElementById("wishList");
+                wishList.innerHTML = ""; // 先清空愿望列表
 
-        snapshot.forEach(doc => {
-            let wishData = doc.data();
-            let wishElement = document.createElement("div");
-            wishElement.className = "wish";
-            wishElement.innerHTML = `
-                <p>${wishData.text}</p>
-                <div class="buttons">
-                    <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
-                    <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
-                </div>
-            `;
-            wishList.appendChild(wishElement);
-        });
-    });
-}
-
+                snapshot.forEach(doc => {
+                    let wishData = doc.data();
+                    let wishElement = document.createElement("div");
+                    wishElement.className = "wish";
+                    wishElement.innerHTML = `
+                        <p>${wishData.text}</p>
+                        <div class="buttons">
+                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
+                            <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
+                        </div>
+                    `;
+                    wishList.appendChild(wishElement);
+                });
+            });
+        }
 
         // 🚀 提交愿望
         function submitWish() {
             let wishText = document.getElementById("wishInput").value.trim();
+            let waterDropSound = document.getElementById("waterDropSound"); // 🔥 获取音效元素
 
             if (!wishText) {
                 alert("让我看看愿望在哪里👀");
@@ -163,18 +161,22 @@ const db = firebase.firestore();
             }
 
             db.collection("wishes").get().then(snapshot => {
-                if (snapshot.size >= 2) {
+                let wishCount = snapshot.size; // 🔥 获取愿望数量
+                if (wishCount >= 2) {
                     alert("交不了啦~荷包要爆炸啦！💥");
                     return;
                 }
 
                 // 播放水滴音效
-                waterDropSound.currentTime = 0; // 让音效从头播放
+                waterDropSound.currentTime = 0;
                 waterDropSound.play();
 
-                db.collection("wishes").add({ text: wishText });
-                alert("收到！即将在下一个跨年前送达🕊");
-                document.getElementById("wishInput").value = "";
+                // 添加愿望
+                db.collection("wishes").add({ text: wishText })
+                    .then(() => {
+                        alert("收到！即将在下一个跨年前送达🕊");
+                        document.getElementById("wishInput").value = "";
+                    });
             });
         }
 
