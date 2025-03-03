@@ -18,6 +18,7 @@
             margin: 0;
             padding: 20px;
             position: relative;
+            overflow: hidden; /* 防止流星超出可视区域 */
         }
 
         h1 {
@@ -127,7 +128,7 @@
             background: linear-gradient(to bottom, #fff, #ff0);
             border-radius: 50%;
             opacity: 0;
-            animation: fall 1.5s linear forwards, slide 1.5s ease-in-out forwards;
+            animation: fall 2s linear infinite, slide 2s ease-in-out infinite;
         }
 
         @keyframes fall {
@@ -136,7 +137,7 @@
                 opacity: 1;
             }
             100% {
-                top: 100%;
+                top: 110%;
                 opacity: 0;
             }
         }
@@ -269,41 +270,31 @@
             }
         });
 
-        // 🎇 流星效果
-        const sky = document.createElement("div");
-        sky.className = "sky";
-        document.body.appendChild(sky);
+        // 创建流星雨效果
+        function createMeteor() {
+            const sky = document.createElement("div");
+            sky.className = "sky";
+            document.body.appendChild(sky);
 
-        // 创建流星
-        const createMeteor = () => {
-            const meteor = document.createElement('div');
-            meteor.classList.add('meteor');
-            sky.appendChild(meteor);
+            for (let i = 0; i < 30; i++) {
+                const meteor = document.createElement("div");
+                meteor.className = "meteor";
+                sky.appendChild(meteor);
 
-            // 设置流星的随机位置、大小和动画延迟
-            const leftPosition = Math.random() * 100;  // 让流星水平位置随机
-            const size = Math.random() * 5 + 5;  // 流星的宽度大小
-            const duration = Math.random() * 2 + 2;  // 流星下落的时长
-            const angle = Math.random() * 30 + 30;  // 流星的倾斜角度
+                const delay = Math.random() * 2; // 延迟时间
+                const size = Math.random() * 3 + 2; // 流星大小
+                const leftPosition = Math.random() * 100 + "%"; // 随机水平位置
+                const angle = Math.random() * 30 + 10; // 随机角度
 
-            meteor.style.left = `${leftPosition}%`;
-            meteor.style.width = `${size}px`;
-            meteor.style.height = `${size * 5}px`;
-            meteor.style.animationDuration = `${duration}s`;
-            meteor.style.animationDelay = `${Math.random() * 2}s`;  // 随机延迟动画启动
-            meteor.style.transform = `rotate(${angle}deg)`;
+                meteor.style.width = `${size}px`;
+                meteor.style.height = `${size}px`;
+                meteor.style.left = leftPosition;
+                meteor.style.animationDelay = `${delay}s`;
+                meteor.style.transform = `rotate(${angle}deg)`;
+            }
+        }
 
-            // 流星完成后移除
-            meteor.addEventListener('animationend', () => {
-                meteor.remove();
-            });
-        };
-
-        // 每隔 0.5 秒生成一个新的流星
-        setInterval(createMeteor, 1000);
-        
-        // 页面加载时，调用loadWishes来加载现有的愿望
-        loadWishes();
+        createMeteor(); // 初始化流星雨
     </script>
 </body>
 </html>
