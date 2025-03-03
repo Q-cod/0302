@@ -138,7 +138,7 @@
             box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
             border-radius: 50%;
             opacity: 0;
-            animation: fall 3s linear infinite;
+            animation: fall 5s linear infinite;
         }
 
         @keyframes fall {
@@ -273,7 +273,7 @@ wishList.appendChild(wishElement);
                 document.body.appendChild(meteor);
                 let delay = Math.random() * 3;
                 let size = Math.random() * 4 + 2;
-                let startX = Math.random() * window.innerWidth * 0.5 + window.innerWidth * 0.5; // 右上角
+                let startX = Math.random() * window.innerWidth; // 让流星从整个屏幕随机位置开始
                 let startY = Math.random() * -50;  // 从屏幕顶部外开始
                 meteor.style.width = size + "px";
                 meteor.style.height = size + "px";
