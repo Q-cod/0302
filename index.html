@@ -186,14 +186,16 @@
 
         // 🌟 实时加载愿望
 function loadWishes() {
+    console.log("🚀 正在加载愿望..."); // 确保函数被调用
     db.collection("wishes").onSnapshot(snapshot => {
         let wishList = document.getElementById("wishList");
-        wishList.innerHTML = ""; // 先清空愿望列表，避免重复渲染
-
-        console.log("加载愿望数量:", snapshot.docs.length); // 🔍 调试 Firestore 里有多少条数据
+        wishList.innerHTML = ""; // 先清空愿望列表
+        console.log("📦 获取到的愿望数量:", snapshot.size);
 
         snapshot.forEach(doc => {
             let wishData = doc.data();
+            console.log("🎁 愿望内容:", wishData.text); // 确保数据正确获取
+
             let wishElement = document.createElement("div");
             wishElement.className = "wish";
             wishElement.innerHTML = `
@@ -203,16 +205,17 @@ function loadWishes() {
                     <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
                 </div>
             `;
+
             wishList.appendChild(wishElement);
         });
-
-        if (snapshot.empty) {
-            wishList.innerHTML = "<p>💭 许愿池空空如也，快来许愿吧！</p>";
-        }
-    }, error => {
-        console.error("加载愿望失败:", error);
     });
 }
+
+// 确保 `loadWishes()` 在页面加载时执行
+window.onload = function() {
+    loadWishes();
+};
+
 
         // 🚀 提交愿望
         function submitWish() {
