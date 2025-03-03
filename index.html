@@ -7,8 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     
     <!-- Firebase 兼容 CDN 版本 -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
     <style>
         body {
@@ -24,12 +25,19 @@
             font-size: 32px;
         }
 
+        p {
+            font-size: 16px;
+            color: #827467;
+        }
+
         #wish-container {
             max-width: 400px;
             margin: auto;
             padding: 20px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
             border: 5px solid #b3d4b0;
         }
 
@@ -60,14 +68,40 @@
             padding: 10px;
             margin: 8px 0;
             border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             font-size: 18px;
             border-left: 5px solid #b8a898;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .edit, .delete {
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .edit {
+            background: #f6ad55;
+        }
+
+        .delete {
+            background: #e53e3e;
         }
     </style>
 </head>
 <body>
     <h1>👸の许愿池🎂</h1>
-    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你实现大大的愿望叭</p>
+    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你 实现大大的愿望叭</p>
 
     <div id="wish-container">
         <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
@@ -76,23 +110,23 @@
     </div>
 
     <!-- 🎵 水滴音效 -->
-    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/4381"></audio>
+    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/294"></audio>
 
     <script>
         console.log("脚本已加载！");
 
         // 🔥 Firebase 配置
         const firebaseConfig = {
-            apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
-            authDomain: "project-183888986321454489.firebaseapp.com",
-            projectId: "project-183888986321454489",
-            messagingSenderId: "559498046640",
-            appId: "1:559498046640:web:b49a8626d3341af0765f75"
-        };
+    apiKey: "AIzaSyBwR2bYpBa-WYU9teQsk6e726wNB-98Obg",
+    authDomain: "project-183888986321454489.firebaseapp.com",
+    projectId: "project-183888986321454489",
+    messagingSenderId: "559498046640",
+    appId: "1:559498046640:web:b49a8626d3341af0765f75",
+};
 
-        // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+// 初始化 Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
         document.getElementById("submitBtn").addEventListener("click", submitWish);
 
@@ -106,7 +140,13 @@
                     let wishData = doc.data();
                     let wishElement = document.createElement("div");
                     wishElement.className = "wish";
-                    wishElement.innerHTML = `<p>${wishData.text}</p>`;
+                    wishElement.innerHTML = 
+                        <p>${wishData.text}</p>
+                        <div class="buttons">
+                            <button class="edit" onclick="editWish('${doc.id}')">再改改</button>
+                            <button class="delete" onclick="deleteWish('${doc.id}')">删掉</button>
+                        </div>
+                    ;
                     wishList.appendChild(wishElement);
                 });
             });
@@ -115,7 +155,6 @@
         // 🚀 提交愿望
         function submitWish() {
             let wishText = document.getElementById("wishInput").value.trim();
-            let waterDropSound = document.getElementById("waterDropSound"); // 获取音效
 
             if (!wishText) {
                 alert("让我看看愿望在哪里👀");
@@ -123,8 +162,8 @@
             }
 
             db.collection("wishes").get().then(snapshot => {
-                if (snapshot.size >= 5) {
-                    alert("许愿池快满啦！请等待更新💫");
+                if (snapshot.size >= 2) {
+                    alert("交不了啦~荷包要爆炸啦！💥");
                     return;
                 }
 
@@ -134,9 +173,23 @@
 
                 db.collection("wishes").add({ text: wishText });
                 alert("收到！即将在下一个跨年前送达🕊");
-
                 document.getElementById("wishInput").value = "";
             });
+        }
+
+        // ✏️ 编辑愿望
+        function editWish(id) {
+            let newWish = prompt("修改你的愿望:");
+            if (newWish && newWish.trim() !== "") {
+                db.collection("wishes").doc(id).update({ text: newWish.trim() });
+            }
+        }
+
+        // ❌ 删除愿望
+        function deleteWish(id) {
+            if (confirm("确定要删除这个愿望吗？")) {
+                db.collection("wishes").doc(id).delete();
+            }
         }
 
         window.onload = loadWishes;
