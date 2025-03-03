@@ -124,8 +124,8 @@
 
         .meteor {
             position: absolute;
-            top: -10%;
-            background: linear-gradient(to bottom, #fff, #ff0);
+            background: #fff; /* 流星颜色 */
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; /* 亮闪闪的效果 */
             border-radius: 50%;
             opacity: 0;
             animation: fall 2s linear infinite, slide 2s ease-in-out infinite;
@@ -148,7 +148,7 @@
                 transform: rotate(0deg);
             }
             100% {
-                left: calc(50% + 100px);
+                left: calc(100% - 200px); /* 从右上到左下 */
                 transform: rotate(45deg);
             }
         }
@@ -165,7 +165,7 @@
     </div>
 
     <!-- 🎵 水滴音效 -->
-    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/294"></audio>
+    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/295"></audio>
 
     <!-- 🎵 背景音乐 -->
     <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
@@ -276,7 +276,7 @@
             sky.className = "sky";
             document.body.appendChild(sky);
 
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 50; i++) {
                 const meteor = document.createElement("div");
                 meteor.className = "meteor";
                 sky.appendChild(meteor);
