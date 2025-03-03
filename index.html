@@ -95,6 +95,19 @@
         .delete {
             background: #e53e3e;
         }
+
+        /* 🎵 音乐按钮 */
+        #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -108,7 +121,13 @@
     </div>
 
     <!-- 🎵 水滴音效 -->
-    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/295"></audio>
+    <audio id="waterDropSound" src="https://www.fesliyanstudios.com/play-mp3/294"></audio>
+
+    <!-- 🎵 背景音乐 -->
+    <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
+
+    <!-- 🎵 音乐控制按钮 -->
+    <button id="music-control">🔈</button>
 
     <script>
         console.log("脚本已加载！");
@@ -153,7 +172,7 @@
         // 🚀 提交愿望
         function submitWish() {
             let wishText = document.getElementById("wishInput").value.trim();
-            let waterDropSound = document.getElementById("waterDropSound"); // 🔥 获取音效元素
+            let waterDropSound = document.getElementById("waterDropSound");
 
             if (!wishText) {
                 alert("让我看看愿望在哪里👀");
@@ -161,17 +180,15 @@
             }
 
             db.collection("wishes").get().then(snapshot => {
-                let wishCount = snapshot.size; // 🔥 获取愿望数量
+                let wishCount = snapshot.size;
                 if (wishCount >= 2) {
                     alert("交不了啦~荷包要爆炸啦！💥");
                     return;
                 }
 
-                // 播放水滴音效
                 waterDropSound.currentTime = 0;
                 waterDropSound.play();
 
-                // 添加愿望
                 db.collection("wishes").add({ text: wishText })
                     .then(() => {
                         alert("收到！即将在下一个跨年前送达🕊");
@@ -194,6 +211,20 @@
                 db.collection("wishes").doc(id).delete();
             }
         }
+
+        // 🎵 背景音乐控制
+        let bgMusic = document.getElementById("bgMusic");
+        let musicControl = document.getElementById("music-control");
+
+        musicControl.addEventListener("click", () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicControl.innerText = "🔊";
+            } else {
+                bgMusic.pause();
+                musicControl.innerText = "🔈";
+            }
+        });
 
         window.onload = loadWishes;
     </script>
