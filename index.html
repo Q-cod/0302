@@ -31,6 +31,7 @@
             color: #827467;
         }
 
+        /* 愿望框（带花草 & 可爱装饰） */
         #wish-container {
             max-width: 400px;
             margin: auto;
@@ -58,6 +59,7 @@
             right: 15px;
         }
 
+        /* 输入框 & 按钮 */
         input, button {
             width: 90%;
             max-width: 400px;
@@ -188,7 +190,7 @@
     <audio id="bgMusic" src="http://music.163.com/song/media/outer/url?id=1376557407.mp3" loop></audio>
 
     <!-- 🎵 音乐控制按钮 -->
-    <button id="music-control">🔈</button>
+    <button id="music-control">🎶</button>
 
     <script>
         console.log("脚本已加载！");
@@ -280,10 +282,10 @@
         musicControl.addEventListener("click", () => {
             if (bgMusic.paused) {
                 bgMusic.play();
-                musicControl.innerText = "🔊";
+                musicControl.innerText = "🎶";
             } else {
                 bgMusic.pause();
-                musicControl.innerText = "🔈";
+                musicControl.innerText = "🎵";
             }
         });
 
