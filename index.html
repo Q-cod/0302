@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>👸️の许愿池🎂</title>
+    <title>👸の许愿池🎂</title>
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     <style>
         body {
@@ -12,46 +12,37 @@
             background-color: #faf0e6;
             margin: 0;
             padding: 20px;
-            position: relative;
             overflow: hidden;
+            position: relative;
         }
 
-        h1 {
-            color: #827467;
-            font-size: 32px;
-        }
-
-        p {
-            font-size: 16px;
-            color: #827467;
-        }
-
-        /* 愿望框（边框增加花草装饰） */
         #wish-container {
             max-width: 400px;
             margin: auto;
             padding: 20px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border: 5px solid #b3d4b0;
             position: relative;
         }
-        #wish-container::before, #wish-container::after {
-            content: "\ud83c\udf3f\ud83c\udf38\ud83c\udf1f";
+
+        /* 修正小花小草的位置，使其固定 */
+        #wish-container::before {
+            content: "🌿🌸✨";
             font-size: 18px;
             position: absolute;
-        }
-        #wish-container::before {
             top: -20px;
             left: 15px;
         }
         #wish-container::after {
+            content: "🌼🌿🌺";
+            font-size: 18px;
+            position: absolute;
             bottom: -20px;
             right: 15px;
         }
 
-        /* 流星特效 */
+        /* 流星雨特效 */
         .sky {
             position: absolute;
             top: 0;
@@ -61,58 +52,57 @@
             pointer-events: none;
             z-index: -1;
         }
-
         .meteor {
             position: absolute;
             background: white;
             box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
             border-radius: 50%;
             opacity: 0;
-            animation: fall 2s linear infinite;
+            animation: fall linear infinite;
         }
 
         @keyframes fall {
             0% {
-                transform: translate(100vw, -10vh) rotate(45deg);
+                transform: translateY(-100px) translateX(0) rotate(0deg);
                 opacity: 1;
             }
             100% {
-                transform: translate(-10vw, 110vh) rotate(45deg);
+                transform: translateY(800px) translateX(300px) rotate(45deg);
                 opacity: 0;
             }
         }
     </style>
 </head>
 <body>
-    <h1>👸️の许愿池🎂</h1>
-    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你实现大大的愿望叭</p>
-
+    <h1>👸の许愿池🎂</h1>
+    <p>~欢迎来到小小许愿池~<br>让小小的我为小小的你 实现大大的愿望叭</p>
     <div id="wish-container">
         <input type="text" id="wishInput" placeholder="给你三秒想一想..." maxlength="100">
         <button id="submitBtn">抛入</button>
         <div id="wishList"></div>
     </div>
-
     <script>
         function createMeteorShower() {
             const sky = document.createElement("div");
             sky.className = "sky";
             document.body.appendChild(sky);
-
+            
             for (let i = 0; i < 50; i++) {
                 const meteor = document.createElement("div");
                 meteor.className = "meteor";
                 sky.appendChild(meteor);
-
-                const delay = Math.random() * 2;
+                
                 const size = Math.random() * 3 + 2;
-                const leftOffset = Math.random() * window.innerWidth;
-                const topOffset = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 2 + 2;
+                const leftPosition = Math.random() * window.innerWidth;
+                const trackOffset = (Math.random() - 0.5) * 100;
                 
                 meteor.style.width = `${size}px`;
                 meteor.style.height = `${size}px`;
-                meteor.style.left = `${leftOffset}px`;
-                meteor.style.top = `-${topOffset}px`;
+                meteor.style.left = `${leftPosition}px`;
+                meteor.style.top = `${trackOffset}px`;
+                meteor.style.animationDuration = `${duration}s`;
                 meteor.style.animationDelay = `${delay}s`;
             }
         }
